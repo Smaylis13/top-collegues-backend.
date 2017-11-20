@@ -20,7 +20,7 @@ import com.example.topcolleguesbackend.repository.CollegueRepository;
 
 @RestController
 @RequestMapping("/collegues")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200", "*"})
 public class CollegueController {
 	/** colRep : CollegueRepository */
 	@Autowired
