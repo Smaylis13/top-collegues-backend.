@@ -6,4 +6,6 @@ import com.example.topcolleguesbackend.entite.Collegue;
 
 public interface CollegueRepository extends JpaRepository<Collegue, Integer>{
 
+	Collegue findByPseudo(String pseudo);
+
 }

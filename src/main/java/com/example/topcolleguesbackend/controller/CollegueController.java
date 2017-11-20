@@ -26,7 +26,9 @@ public class CollegueController {
 	@Autowired
 	CollegueRepository colRep;
 
-	/**Méthode get de listage des collegues
+	/**
+	 * Méthode get de listage des collegues
+	 * 
 	 * @return
 	 */
 	@GetMapping("")
@@ -34,31 +36,47 @@ public class CollegueController {
 		return this.colRep.findAll();
 	}
 
-	/**Méthode post d'ajout de collegue
+	/**
+	 * Méthode post d'ajout de collegue
+	 * Un unique pseudo/collègue
 	 * @param col
 	 * @return
 	 */
-	@PostMapping("")
+	@PostMapping("/ajouter")
 	public Collegue ajouter(@RequestBody Collegue col) {
-		Optional<Collegue> optCol = this.colRep.findAll().stream().filter(collegue -> collegue.getPseudo() == col.getPseudo())
-				.findAny();
+		System.out.println(col);
+		Optional<Collegue> optCol = this.colRep.findAll().stream()
+				.filter(collegue -> collegue.getPseudo() == col.getPseudo()).findAny();
 		if (!optCol.isPresent()) {
 			this.colRep.save(col);
 		}
 		return this.colRep.findOne(col.getId());
 	}
 
-	/**Méthode put de modification du score
+	/**
+	 * Méthode put de modification du score
+	 * 
 	 * @param col
-	 * @param id
-	 * @return
+	 * @param pseudo
+	 * @return collegue
 	 */
-	@PutMapping("/{id}/score")
-	public Collegue update(@RequestBody Collegue col, @PathVariable int id) {
-		Collegue oldCol = this.colRep.findOne(id);
-		oldCol.setScore(col.getScore());
+	@PutMapping("/{pseudo}/score")
+	public Collegue update(@PathVariable String pseudo, @RequestBody String avis) {
+
+		Collegue oldCol = this.colRep.findByPseudo(pseudo);
+		if (avis.equals("jaime"))
+			oldCol.setScore(oldCol.getScore() + 5);
+		else if (avis.equals("jeDeteste"))
+			oldCol.setScore(oldCol.getScore() - 5);
+
 		this.colRep.save(oldCol);
-		return this.colRep.findOne(id);
+		return oldCol;
+	}
+
+	@GetMapping("/{pseudo}")
+	public Collegue getCollegueByPseudo(@PathVariable String pseudo) {
+
+		return this.colRep.findByPseudo(pseudo);
 	}
 
 }
